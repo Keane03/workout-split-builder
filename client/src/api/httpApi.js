@@ -1,8 +1,3 @@
-// The real client. Every function here talks to YOUR Express API.
-//
-// This is the file that matters for your finals project. mockApi.js exists so
-// you can build the interface before this has anywhere to point.
-
 const BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 async function request(path, options) {
@@ -26,15 +21,34 @@ async function request(path, options) {
   return response.status === 204 ? null : response.json()
 }
 
-export const listSightings = () => request('/api/sightings')
+export const listExercises = () => request('/api/exercises')
 
-export const getSighting = (id) => request(`/api/sightings/${id}`)
+export const listWorkouts = () => request('/api/workouts')
 
-export const createSighting = (input) =>
-  request('/api/sightings', { method: 'POST', body: JSON.stringify(input) })
+export const createWorkout = (input) =>
+  request('/api/workouts', { method: 'POST', body: JSON.stringify(input) })
 
-export const updateSighting = (id, input) =>
-  request(`/api/sightings/${id}`, { method: 'PUT', body: JSON.stringify(input) })
+export const updateWorkout = (id, input) =>
+  request(`/api/workouts/${id}`, { method: 'PUT', body: JSON.stringify(input) })
 
-export const deleteSighting = (id) =>
-  request(`/api/sightings/${id}`, { method: 'DELETE' })
+export const deleteWorkout = (id) =>
+  request(`/api/workouts/${id}`, { method: 'DELETE' })
+
+export const getSchedule = () => request('/api/schedule')
+
+export const updateSchedule = (schedule) =>
+  request('/api/schedule', { method: 'PUT', body: JSON.stringify(schedule) })
+
+export const getProfile = () => request('/api/profile')
+
+export const updateProfile = (profile) =>
+  request('/api/profile', { method: 'PUT', body: JSON.stringify(profile) })
+
+export const getWorkoutSession = (workoutId) =>
+  request(`/api/workouts/${workoutId}/session`)
+
+export const updateWorkoutSession = (workoutId, session) =>
+  request(`/api/workouts/${workoutId}/session`, {
+    method: 'PUT',
+    body: JSON.stringify(session),
+  })

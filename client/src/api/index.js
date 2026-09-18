@@ -29,9 +29,15 @@ export const USING_MOCK_API = import.meta.env.VITE_USE_MOCK_API !== 'false'
 const implementation = USING_MOCK_API ? mockApi : httpApi
 
 export const {
-  listSightings,
-  getSighting,
-  createSighting,
-  updateSighting,
-  deleteSighting,
+  listExercises,
+  listWorkouts,
+  createWorkout,
+  updateWorkout,
+  deleteWorkout,
+  getSchedule,
+  updateSchedule,
+  getProfile,
+  updateProfile,
+  getWorkoutSession,
+  updateWorkoutSession,
 } = implementation

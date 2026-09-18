@@ -5,8 +5,8 @@ Delete it once you have worked through it.
 
 ## What you have
 
-A working full-stack application, small on purpose, that you are going to replace
-with your own.
+A Workout Split Builder application, small on purpose, implemented as a Week 1
+React/Vite client with a mock/localStorage data layer.
 
 ```
 client/     React, built by Vite. Deploys to GitHub Pages already.
@@ -14,14 +14,12 @@ server/     Express and PostgreSQL. Deploys nowhere yet: that is your job.
 docs/       where your planning documents and weekly reports go
 ```
 
-**It runs right now, with no database and no server**, because the client ships
-pointing at a simulated backend. That is deliberate: it means your repository has
-a live link on day one, and it means you can build your interface in week one
-without waiting on a deployment.
+**It runs right now, with no database and no server**, because the client uses a
+simulated backend through its API abstraction. That is deliberate: it lets you
+build and demonstrate Workout Split Builder in Week 1 without backend setup.
 
-It is also **not** a finished project. Your finals submission is the React
-client, your Express API and your PostgreSQL database, all three deployed and
-reachable from a link. Read
+Express and PostgreSQL integration are planned for a later phase and are not
+implemented yet. Read
 `content/extending-your-app/03-demo-mode-in-the-template.md` in your course
 workspace before you decide otherwise.
 
@@ -29,8 +27,8 @@ workspace before you decide otherwise.
 
 ### 1. Make it yours
 
-- [ ] **Rename the repository** to your app's name. This is your repository, in
-      your own account, so there is no `classcode-yourname` convention this time.
+- [ ] **Rename the repository** if needed. This is your repository, in your own
+      account, so there is no `classcode-yourname` convention this time.
 - [ ] Put your name in `LICENSE`.
 - [ ] Replace `README.md` with your own. Keep the shape; change everything else.
 - [ ] Change the `<title>` and description in `client/index.html`.
@@ -45,8 +43,8 @@ cp .env.example .env
 npm run dev
 ```
 
-Open http://localhost:5173. Add a sighting, reload, see it persist. That data is
-in your browser's `localStorage`, nowhere else.
+Open http://localhost:5173. Create or edit a workout, reload, and see it persist.
+That demo data is in your browser's `localStorage`, nowhere else.
 
 ### 3. Deploy it, today
 
@@ -86,16 +84,17 @@ the day the repository exists.
 
 ### Week one to two: make the interface yours
 
-Work entirely in `client/`, in demo mode. Change `src/api/mockApi.js` and
-`src/api/seed.json` to hold your data rather than ghost sightings, and rebuild
-`App.jsx` into your actual screens.
+Work entirely in `client/`, in demo mode. The Workout Split Builder data lives
+in `src/api/mockApi.js` and `src/api/seed.json`, while `App.jsx` provides the
+dashboard, exercise library, workout builder, schedule, start workout, and
+settings screens.
 
 **Keep the shape of `src/api/`.** One interface, two implementations, chosen by a
 variable. It is what makes the switch to your real API a one-line change instead
 of a rewrite. Whatever functions you end up with, make sure both files provide
 all of them.
 
-### Week two to three: a real database
+### Later phase: a real database
 
 Read `content/extending-your-app/04-running-postgres-for-real.md`. Every test you
 passed in Module 5 ran against `pg-mem`, an imitation, so there is a good chance
@@ -111,13 +110,13 @@ npm run dev
 curl http://localhost:3000/readyz
 ```
 
-Edit `db/schema.sql` to be your schema, and `sightingsRepo.js` to be your
-queries. Keep every query parameterised.
+When this phase is approved, adapt `db/schema.sql` and the repository layer to
+the workout data model. Keep every query parameterised.
 
-### Week three to four: get all three online
+### Later phase: connect the full stack
 
-Pages 5 to 10 of the extending unit. Pick a database host, pick an API host,
-deploy both, then flip the client:
+After the Express and PostgreSQL work is implemented, follow Pages 5 to 10 of
+the extending unit to deploy the API and database, then flip the client:
 
 - `VITE_USE_MOCK_API` to `false`
 - `VITE_API_BASE_URL` to your API's URL

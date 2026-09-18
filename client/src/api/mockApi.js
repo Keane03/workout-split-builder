@@ -1,16 +1,6 @@
-// The simulated backend.
-//
-// Same function names, same return types, and the same shape of failure as
-// httpApi.js, so your components cannot tell the difference. Data lives in the
-// visitor's own browser and goes no further.
-//
-// This exists so the template's GitHub Pages link works on day one and so you
-// can build the interface before your API is deployed. It is NOT a finished
-// project. See content/extending-your-app page 3.
-
 import seed from './seed.json'
 
-const KEY = 'final-project:sightings'
+const KEY = 'workout-split-builder:demo'
 
 // A real network is not instant. Keeping this delay is what forces you to build
 // a loading state now, while it is cheap, instead of discovering you need one
@@ -23,12 +13,12 @@ function read() {
     try {
       return JSON.parse(stored)
     } catch {
-      // Corrupted storage. Start again rather than crashing the app.
       localStorage.removeItem(KEY)
     }
   }
-  localStorage.setItem(KEY, JSON.stringify(seed))
-  return seed
+  const initial = structuredClone(seed)
+  localStorage.setItem(KEY, JSON.stringify(initial))
+  return initial
 }
 
 function write(rows) {
@@ -36,40 +26,83 @@ function write(rows) {
   return rows
 }
 
-export async function listSightings() {
+export async function listExercises() {
   await delay()
-  return read().slice().sort((a, b) => b.reported_at.localeCompare(a.reported_at))
+  return read().exercises
 }
 
-export async function getSighting(id) {
+export async function listWorkouts() {
   await delay()
-  const found = read().find((row) => String(row.id) === String(id))
-  if (!found) throw new Error('Not found')
-  return found
+  return read().workouts
 }
 
-export async function createSighting(input) {
+export async function createWorkout(input) {
   await delay()
+  const state = read()
   const created = {
     ...input,
     id: crypto.randomUUID(),
-    reported_at: new Date().toISOString(),
+    exercises: input.exercises || [],
   }
-  write([...read(), created])
+  write({ ...state, workouts: [...state.workouts, created] })
   return created
 }
 
-export async function updateSighting(id, input) {
+export async function updateWorkout(id, input) {
   await delay()
-  const rows = read()
-  const index = rows.findIndex((row) => String(row.id) === String(id))
+  const state = read()
+  const index = state.workouts.findIndex((row) => String(row.id) === String(id))
   if (index === -1) throw new Error('Not found')
-  rows[index] = { ...rows[index], ...input }
-  write(rows)
-  return rows[index]
+  state.workouts[index] = { ...state.workouts[index], ...input }
+  write(state)
+  return state.workouts[index]
 }
 
-export async function deleteSighting(id) {
+export async function deleteWorkout(id) {
   await delay()
-  write(read().filter((row) => String(row.id) !== String(id)))
+  const state = read()
+  state.workouts = state.workouts.filter((row) => String(row.id) !== String(id))
+  Object.keys(state.schedule).forEach((day) => {
+    if (state.schedule[day] === id) state.schedule[day] = null
+  })
+  write(state)
+}
+
+export async function getSchedule() {
+  await delay()
+  return read().schedule
+}
+
+export async function updateSchedule(schedule) {
+  await delay()
+  const state = read()
+  state.schedule = schedule
+  write(state)
+  return state.schedule
+}
+
+export async function getProfile() {
+  await delay()
+  return read().profile
+}
+
+export async function updateProfile(profile) {
+  await delay()
+  const state = read()
+  state.profile = profile
+  write(state)
+  return state.profile
+}
+
+export async function getWorkoutSession(workoutId) {
+  await delay()
+  return read().sessions[workoutId] || { completed: [] }
+}
+
+export async function updateWorkoutSession(workoutId, session) {
+  await delay()
+  const state = read()
+  state.sessions[workoutId] = session
+  write(state)
+  return session
 }

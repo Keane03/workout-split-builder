@@ -1,8 +1,48 @@
-[
-  { "id": "seed-1", "place": "Library, third floor", "description": "Chairs rearranged overnight, every time. The night guard says he locks the room himself.", "spookiness": 3, "reported_at": "2026-08-01T14:20:00.000Z" },
-  { "id": "seed-2", "place": "Old gym", "description": "Lights flicker in a fixed pattern after 9pm, always three short and one long.", "spookiness": 4, "reported_at": "2026-08-03T11:05:00.000Z" },
-  { "id": "seed-3", "place": "Parking basement", "description": "Footsteps with no one there. Reported separately by three different people in one week, which is what makes this one hard to dismiss. Two of them were alone at the time and did not know about the others. This entry is deliberately long, because a seed row of four words hides every text-wrapping bug you have.", "spookiness": 5, "reported_at": "2026-08-05T22:40:00.000Z" },
-  { "id": "seed-4", "place": "Canteen", "description": "A cold spot near the back door, every morning before seven.", "spookiness": 1, "reported_at": "2026-08-06T07:15:00.000Z" },
-  { "id": "seed-5", "place": "AB Building stairwell", "description": "", "spookiness": 2, "reported_at": "2026-08-08T18:30:00.000Z" },
-  { "id": "seed-6", "place": "Chapel garden", "description": "Someone humming. Stops the moment you turn around.", "spookiness": 3, "reported_at": "2026-08-10T05:50:00.000Z" }
-]
+{
+  "exercises": [
+    { "id": "exercise-1", "name": "Barbell Squat", "muscleGroup": "Legs", "equipment": "Barbell", "difficulty": "Intermediate", "description": "A compound lower-body lift focused on the quads and glutes." },
+    { "id": "exercise-2", "name": "Bench Press", "muscleGroup": "Chest", "equipment": "Barbell", "difficulty": "Intermediate", "description": "Press the bar from your chest while keeping your shoulders stable." },
+    { "id": "exercise-3", "name": "Lat Pulldown", "muscleGroup": "Back", "equipment": "Cable", "difficulty": "Beginner", "description": "Pull the bar toward your upper chest without swinging." },
+    { "id": "exercise-4", "name": "Romanian Deadlift", "muscleGroup": "Legs", "equipment": "Dumbbell", "difficulty": "Intermediate", "description": "Hinge at the hips to train the hamstrings and glutes." },
+    { "id": "exercise-5", "name": "Shoulder Press", "muscleGroup": "Shoulders", "equipment": "Dumbbell", "difficulty": "Beginner", "description": "Press dumbbells overhead with a controlled range of motion." },
+    { "id": "exercise-6", "name": "Plank", "muscleGroup": "Core", "equipment": "Bodyweight", "difficulty": "Beginner", "description": "Brace your core and maintain a straight line from head to heels." },
+    { "id": "exercise-7", "name": "Push-ups", "muscleGroup": "Chest", "equipment": "Bodyweight", "difficulty": "Beginner", "description": "Lower and press your body while keeping your elbows controlled." },
+    { "id": "exercise-8", "name": "Bicep Curl", "muscleGroup": "Arms", "equipment": "Dumbbell", "difficulty": "Beginner", "description": "Curl the weights without rocking your torso." },
+    { "id": "exercise-9", "name": "Seated Row", "muscleGroup": "Back", "equipment": "Cable", "difficulty": "Beginner", "description": "Pull the cable toward your ribs and squeeze your shoulder blades." },
+    { "id": "exercise-10", "name": "Walking Lunges", "muscleGroup": "Legs", "equipment": "Bodyweight", "difficulty": "Beginner", "description": "Step forward into alternating lunges with an upright torso." }
+  ],
+  "workouts": [
+    {
+      "id": "workout-1",
+      "name": "Full Body Foundation",
+      "description": "A balanced session for building consistency.",
+      "exercises": [
+        { "exerciseId": "exercise-1", "sets": 3, "reps": 8, "rest": 90 },
+        { "exerciseId": "exercise-2", "sets": 3, "reps": 8, "rest": 90 },
+        { "exerciseId": "exercise-6", "sets": 3, "reps": 30, "rest": 45 }
+      ]
+    },
+    {
+      "id": "workout-2",
+      "name": "Upper Body Strength",
+      "description": "A focused push and pull workout for the upper body.",
+      "exercises": [
+        { "exerciseId": "exercise-2", "sets": 4, "reps": 8, "rest": 90 },
+        { "exerciseId": "exercise-3", "sets": 4, "reps": 10, "rest": 75 },
+        { "exerciseId": "exercise-5", "sets": 3, "reps": 10, "rest": 60 },
+        { "exerciseId": "exercise-8", "sets": 3, "reps": 12, "rest": 45 }
+      ]
+    }
+  ],
+  "schedule": {
+    "Monday": "workout-1",
+    "Tuesday": null,
+    "Wednesday": "workout-2",
+    "Thursday": null,
+    "Friday": "workout-1",
+    "Saturday": null,
+    "Sunday": null
+  },
+  "profile": { "name": "Athlete" },
+  "sessions": {}
+}
