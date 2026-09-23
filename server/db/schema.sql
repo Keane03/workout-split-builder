@@ -1,20 +1,34 @@
--- The complete shape of the database. Safe to run against an empty database,
--- and safe to run twice.
---
--- This file is committed on purpose. Your schema is a fact about your
--- application, not a runtime concern: it should be readable by opening a file
--- rather than by connecting to a server. It is also what lets you move to a
--- hosted database in one command.
+-- Workout Split Builder database schema
 
-CREATE TABLE IF NOT EXISTS sightings (
-  id          SERIAL PRIMARY KEY,
-  place       TEXT        NOT NULL,
-  description TEXT        NOT NULL DEFAULT '',
-  spookiness  INTEGER     NOT NULL CHECK (spookiness BETWEEN 1 AND 5),
-  reported_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE IF NOT EXISTS exercises (
+  id           SERIAL PRIMARY KEY,
+  name         TEXT NOT NULL,
+  muscle_group TEXT NOT NULL,
+  equipment    TEXT NOT NULL,
+  difficulty   TEXT NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- The list page always sorts newest first. Without this the database reads
--- every row and sorts it on each request.
-CREATE INDEX IF NOT EXISTS sightings_reported_at_idx
-  ON sightings (reported_at DESC);
+CREATE TABLE IF NOT EXISTS workouts (
+  id           SERIAL PRIMARY KEY,
+  name         TEXT NOT NULL,
+  day_of_week  TEXT NOT NULL,
+  completed    BOOLEAN NOT NULL DEFAULT false,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS workout_exercises (
+  id            SERIAL PRIMARY KEY,
+  workout_id    INTEGER NOT NULL REFERENCES workouts(id) ON DELETE CASCADE,
+  exercise_id   INTEGER NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
+  sets          INTEGER NOT NULL DEFAULT 3,
+  reps          INTEGER NOT NULL DEFAULT 10,
+  rest_seconds  INTEGER NOT NULL DEFAULT 60,
+  position      INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE INDEX IF NOT EXISTS workout_exercises_workout_idx
+  ON workout_exercises (workout_id, position);
+
+CREATE INDEX IF NOT EXISTS workout_exercises_exercise_idx
+  ON workout_exercises (exercise_id);
