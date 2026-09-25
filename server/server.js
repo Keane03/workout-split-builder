@@ -12,9 +12,18 @@ import {
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
+const allowedOrigins = process.env.CORS_ORIGINS
+  ?.split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (!allowedOrigins?.length) {
+  throw new Error('CORS_ORIGINS is required');
+}
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGINS?.split(',').map((origin) => origin.trim()) || '*',
+    origin: allowedOrigins,
   })
 );
 
@@ -86,16 +95,39 @@ app.post('/api/workouts', async (req, res, next) => {
   try {
     const { name, dayOfWeek } = req.body;
 
-    if (!name || !dayOfWeek) {
-      return res.status(400).json({
-        error: 'name and dayOfWeek are required',
-      });
-    }
+    const validDays = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
+if (
+  typeof name !== 'string' ||
+  !name.trim() ||
+  name.trim().length > 100
+) {
+  return res.status(400).json({
+    error: 'name must be a non-empty string with at most 100 characters',
+  });
+}
+
+if (
+  typeof dayOfWeek !== 'string' ||
+  !validDays.includes(dayOfWeek)
+) {
+  return res.status(400).json({
+    error: 'dayOfWeek must be a valid day of the week',
+  });
+}
 
     const workout = await createWorkout({
-      name,
-      dayOfWeek,
-    });
+  name: name.trim(),
+  dayOfWeek,
+});
 
     res.status(201).json(workout);
   } catch (error) {
