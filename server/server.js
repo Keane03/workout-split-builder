@@ -11,6 +11,44 @@ import {
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const appUsername = process.env.APP_USERNAME;
+const appPassword = process.env.APP_PASSWORD;
+
+if (!appUsername || !appPassword) {
+  throw new Error('APP_USERNAME and APP_PASSWORD are required');
+}
+
+function requireBasicAuth(req, res, next) {
+  const authorization = req.headers.authorization;
+
+  if (!authorization?.startsWith('Basic ')) {
+    res.set('WWW-Authenticate', 'Basic realm="Workout Split Builder"');
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const encodedCredentials = authorization.slice('Basic '.length);
+  const decodedCredentials = Buffer.from(
+    encodedCredentials,
+    'base64'
+  ).toString('utf8');
+
+  const separatorIndex = decodedCredentials.indexOf(':');
+
+  if (separatorIndex === -1) {
+    res.set('WWW-Authenticate', 'Basic realm="Workout Split Builder"');
+    return res.status(401).json({ error: 'Invalid authentication' });
+  }
+
+  const username = decodedCredentials.slice(0, separatorIndex);
+  const password = decodedCredentials.slice(separatorIndex + 1);
+
+  if (username !== appUsername || password !== appPassword) {
+    res.set('WWW-Authenticate', 'Basic realm="Workout Split Builder"');
+    return res.status(401).json({ error: 'Invalid authentication' });
+  }
+
+  next();
+}
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ?.split(',')
@@ -28,6 +66,8 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use(requireBasicAuth);
 
 app.get('/healthz', (_req, res) => {
   res.json({ ok: true });
