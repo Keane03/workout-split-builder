@@ -78,7 +78,7 @@
 ### Written by me
 
 - File: `AI-USAGE.md`
-- Commit: To be added in the Week 1 AI usage commit.
+- Commit: `227981f` — Add Week 1 AI usage documentation
 - What it does and why it is built this way: This file documents how I used AI during the project, where I found problems in AI-generated work, and which parts I personally wrote or understand.
 
 ### The AI-written part I understand best
@@ -86,3 +86,50 @@
 - File: `client/src/App.jsx`
 - Commit: https://github.com/Keane03/workout-split-builder/commit/87000079e8e2641f630967401608d3b9d8335398
 - What it does and why we kept it: This file controls the main Workout Split Builder interface and connects the different application screens to the API layer. I reviewed and tested the generated implementation, including the dashboard, exercise library, workout builder, schedule, workout completion, and settings behavior.
+
+## Week 2 AI Use
+
+### Entry 7 — PostgreSQL Database and Workout API
+
+- **Date:** 2026-09-23
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help moving Workout Split Builder from the Week 1 mock/local-storage setup toward a Node.js, Express, and PostgreSQL backend.
+- **What AI gave:** AI suggested a PostgreSQL schema, seed data, repository structure, database connection setup, and Express routes for exercises and workouts.
+- **What I kept, changed, and why:** I used the suggested backend structure as a starting point, then tested the schema, seed scripts, and API structure locally. I kept the parts that matched the project requirements and adjusted the project around the existing frontend structure.
+- **Commit:** `1b5b978` — Build Week 2 database and workout API
+
+### Entry 8 — Security Configuration
+
+- **Date:** 2026-09-24
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help checking the project against the security requirements given for the final project.
+- **What AI gave:** AI identified areas involving environment variables, database credentials, GitHub Actions, parameterized queries, error handling, and public repository security.
+- **What I kept, changed, and why:** I applied the security changes that matched the requirements, including safer environment configuration and GitHub Actions changes. I also checked that real `.env` files remained ignored by Git.
+- **Commit:** `c6e69ea` — Harden project security configuration
+
+### Entry 9 — Backend Validation and CORS
+
+- **Date:** 2026-09-25
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help improving server-side validation and restricting which browser origins could call the API.
+- **What AI gave:** AI suggested validation for route IDs and workout input, together with an allowlisted CORS configuration.
+- **What I kept, changed, and why:** I kept the validation and CORS changes because they matched the security checklist and made the backend stricter about invalid input and allowed origins.
+- **Commit:** `cbfb38d` — Add backend validation and stricter CORS
+
+### Entry 10 — Basic Authentication
+
+- **Date:** 2026-09-25
+- **Tool:** ChatGPT
+- **What I asked:** I asked how to protect the API because the application can write to a database and does not yet have a normal user account system.
+- **What AI gave:** AI suggested using environment-based Basic Authentication as a temporary protection layer for the API.
+- **What I kept, changed, and why:** I implemented Basic Authentication before the API routes and kept the username and password in local environment variables instead of the public repository.
+- **Commit:** `e672f64` — Add Basic Auth protection to API
+
+### Entry 11 — Week 2 Setup Documentation
+
+- **Date:** 2026-09-27
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help correcting the README after testing showed that the frontend and backend use separate `package.json` files and that some earlier setup commands were incorrect.
+- **What AI gave:** AI suggested corrected installation, database, environment, security, and run instructions based on the actual repository structure.
+- **What I kept, changed, and why:** I updated the README and `.env.example`, then verified the frontend build and successfully ran the PostgreSQL schema and seed scripts before committing the changes.
+- **Commit:** `20d69ff` — Update Week 2 setup documentation
