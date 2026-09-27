@@ -1,5 +1,8 @@
 -- Workout Split Builder seed data
 
+-- Reset development seed data so this script can be run repeatedly.
+TRUNCATE TABLE workout_exercises, workouts, exercises RESTART IDENTITY CASCADE;
+
 INSERT INTO exercises (name, muscle_group, equipment, difficulty)
 VALUES
   ('Barbell Squat', 'Legs', 'Barbell', 'Intermediate'),
