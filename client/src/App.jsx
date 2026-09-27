@@ -13,6 +13,11 @@ import {
   updateWorkoutSession,
 } from './api'
 import DemoNotice from './components/DemoNotice.jsx'
+import {
+  getTotalWorkouts,
+  getTotalExercises,
+  estimateWorkoutMinutes,
+} from './utils/workoutStats.js'
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const NAV_ITEMS = [
@@ -31,11 +36,6 @@ function todayName() {
   return DAYS[day === 0 ? 6 : day - 1]
 }
 
-function estimateMinutes(workout) {
-  return workout.exercises.reduce((total, item) => {
-    return total + (Number(item.sets) * 45 + Number(item.rest) * Math.max(Number(item.sets) - 1, 0)) / 60
-  }, 0)
-}
 
 export default function App() {
   const [status, setStatus] = useState('loading')
@@ -160,8 +160,114 @@ export default function App() {
   )
 }
 
-function Dashboard({ todayWorkout, today, schedule, workoutById, workouts, completion, onOpen, onStart }) {
-  return <div className="screen dashboard"><section className="hero-panel"><div><span className="section-kicker">{today} session</span><h2>{todayWorkout?.name || 'Rest and recover'}</h2><p>{todayWorkout ? todayWorkout.description : 'No workout assigned today. Use the schedule to plan your next session.'}</p>{todayWorkout && <button onClick={() => onStart(todayWorkout.id)}>Start workout <span>→</span></button>}</div><div className="hero-stamp"><strong>{todayWorkout ? Math.round(estimateMinutes(todayWorkout)) : '—'}</strong><span>min estimated</span></div></section><div className="stat-grid"><div className="stat-card"><span>Total workouts</span><strong>{workouts.length}</strong><small>in your library</small></div><div className="stat-card"><span>Weekly completion</span><strong>{completion}%</strong><small>scheduled sessions</small></div><div className="stat-card"><span>Planned today</span><strong>{todayWorkout ? '1' : '0'}</strong><small>{todayWorkout ? 'ready to go' : 'rest day'}</small></div></div><section className="dashboard-section"><div className="section-heading"><div><span className="section-kicker">This week</span><h2>Weekly schedule</h2></div><button className="text-button" onClick={() => onOpen('schedule')}>Edit schedule →</button></div><div className="week-strip">{DAYS.map((day) => { const workout = workoutById(schedule[day]); return <button key={day} className={`day-card ${day === today ? 'today' : ''} ${workout ? 'planned' : ''}`} onClick={() => workout && onStart(workout.id)}><span>{day.slice(0, 3)}</span><strong>{workout ? workout.name : 'Rest'}</strong><small>{workout ? `${Math.round(estimateMinutes(workout))} min` : 'Recovery'}</small></button> })}</div></section></div>
+function Dashboard({
+  todayWorkout,
+  today,
+  schedule,
+  workoutById,
+  workouts,
+  completion,
+  onOpen,
+  onStart,
+}) {
+  const totalWorkouts = getTotalWorkouts(workouts)
+  const totalExercises = getTotalExercises(workouts)
+
+  return (
+    <div className="screen dashboard">
+      <section className="hero-panel">
+        <div>
+          <span className="section-kicker">{today} session</span>
+          <h2>{todayWorkout?.name || 'Rest and recover'}</h2>
+
+          <p>
+            {todayWorkout
+              ? todayWorkout.description
+              : 'No workout assigned today. Use the schedule to plan your next session.'}
+          </p>
+
+          {todayWorkout && (
+            <button onClick={() => onStart(todayWorkout.id)}>
+              Start workout <span>→</span>
+            </button>
+          )}
+        </div>
+
+        <div className="hero-stamp">
+          <strong>
+            {todayWorkout
+              ? estimateWorkoutMinutes(todayWorkout)
+              : '—'}
+          </strong>
+          <span>min estimated</span>
+        </div>
+      </section>
+
+      <div className="stat-grid">
+        <div className="stat-card">
+          <span>Total workouts</span>
+          <strong>{totalWorkouts}</strong>
+          <small>in your library</small>
+        </div>
+
+        <div className="stat-card">
+          <span>Weekly completion</span>
+          <strong>{completion}%</strong>
+          <small>scheduled sessions</small>
+        </div>
+
+        <div className="stat-card">
+          <span>Total exercises</span>
+          <strong>{totalExercises}</strong>
+          <small>across all workouts</small>
+        </div>
+      </div>
+
+      <section className="dashboard-section">
+        <div className="section-heading">
+          <div>
+            <span className="section-kicker">This week</span>
+            <h2>Weekly schedule</h2>
+          </div>
+
+          <button
+            className="text-button"
+            onClick={() => onOpen('schedule')}
+          >
+            Edit schedule →
+          </button>
+        </div>
+
+        <div className="week-strip">
+          {DAYS.map((day) => {
+            const workout = workoutById(schedule[day])
+
+            return (
+              <button
+                key={day}
+                className={`day-card ${day === today ? 'today' : ''} ${
+                  workout ? 'planned' : ''
+                }`}
+                onClick={() => workout && onStart(workout.id)}
+              >
+                <span>{day.slice(0, 3)}</span>
+
+                <strong>
+                  {workout ? workout.name : 'Rest'}
+                </strong>
+
+                <small>
+                  {workout
+                    ? `${estimateWorkoutMinutes(workout)} min`
+                    : 'Recovery'}
+                </small>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+    </div>
+  )
 }
 
 function ExerciseLibrary({ exercises, onAdd }) {
