@@ -77,15 +77,44 @@
 
 ### Written by me
 
-- File: `AI-USAGE.md`
-- Commit: `227981f` — Add Week 1 AI usage documentation
-- What it does and why it is built this way: This file documents how I used AI during the project, where I found problems in AI-generated work, and which parts I personally wrote or understand.
+#### `client/src/styles.css`
+
+- **Commit:** `8700007` — Build Week 1 Workout Split Builder client
+- **Contribution:** I personally wrote most of the styling used by the Workout Split Builder interface.
+- **What it does:** This file controls the layout, dashboard cards, sidebar, exercise cards, buttons, forms, responsive layout, spacing, and general visual design of the application.
+- **Why I built it this way:** I wanted the application to have a consistent workout-dashboard design while keeping the styling in one main CSS file that I could easily adjust.
+
+#### `client/src/utils/workoutStats.js`
+
+- **Commit:** `80b5ee9` — Add workout statistics utilities
+- **Contribution:** I wrote the workout statistics utility functions.
+- **What it does:** It calculates total workouts, completed workouts, completion percentage, total exercises, estimated workout time, and finds a workout for a given day.
+- **Why I built it this way:** I separated the calculations from `App.jsx` so the dashboard code is easier to read and the functions can be reused.
+
+#### `client/src/utils/exerciseFilters.js`
+
+- **Commit:** `6536dbc` — Add reusable exercise filtering utilities
+- **Contribution:** I wrote the exercise filtering utility functions.
+- **What it does:** It filters the exercise list by search text, muscle group, equipment, and difficulty.
+- **Why I built it this way:** Keeping each filter in a small function makes the filtering logic easier to understand, test, and reuse.
+
+### AI-assisted integration
+
+- **File:** `client/src/App.jsx`
+- **Commits:** `80b5ee9`, `6536dbc`
+- **Contribution:** AI helped me connect my utility functions to the existing React application.
+- **What I understand:** The imported utility functions receive the current workout or exercise arrays, process them, and return values that the dashboard and Exercise Library display.
+
+### Backend
+
+The Week 2 Node.js, Express, PostgreSQL, validation, CORS, and Basic Authentication work was mostly AI-assisted. I reviewed the structure, tested the database scripts and API routes, corrected problems found during testing, and documented the AI assistance in this file.
 
 ### The AI-written part I understand best
 
-- File: `client/src/App.jsx`
-- Commit: https://github.com/Keane03/workout-split-builder/commit/87000079e8e2641f630967401608d3b9d8335398
-- What it does and why we kept it: This file controls the main Workout Split Builder interface and connects the different application screens to the API layer. I reviewed and tested the generated implementation, including the dashboard, exercise library, workout builder, schedule, workout completion, and settings behavior.
+- **File:** `client/src/App.jsx`
+- **Commit:** `8700007` — Build Week 1 Workout Split Builder client
+- **What it does:** `App.jsx` controls the main application state and switches between the Dashboard, Exercise Library, Workout Builder, Schedule, Start Workout, and Settings screens.
+- **Why we kept it:** I tested the interface and understand how the application state, API functions, dashboard calculations, filtering utilities, and screens are connected.
 
 ## Week 2 AI Use
 
