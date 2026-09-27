@@ -1,3 +1,9 @@
+import {
+  filterBySearch,
+  filterByMuscle,
+  filterByEquipment,
+  filterByDifficulty,
+} from './utils/exerciseFilters.js'
 import { useEffect, useState } from 'react'
 import {
   createWorkout,
@@ -276,7 +282,10 @@ function ExerciseLibrary({ exercises, onAdd }) {
   const [equipment, setEquipment] = useState('All')
   const [difficulty, setDifficulty] = useState('All')
   const values = (key) => ['All', ...new Set(exercises.map((exercise) => exercise[key]))]
-  const filtered = exercises.filter((exercise) => exercise.name.toLowerCase().includes(query.toLowerCase()) && (muscle === 'All' || exercise.muscleGroup === muscle) && (equipment === 'All' || exercise.equipment === equipment) && (difficulty === 'All' || exercise.difficulty === difficulty))
+ let filtered = filterBySearch(exercises, query)
+filtered = filterByMuscle(filtered, muscle)
+filtered = filterByEquipment(filtered, equipment)
+filtered = filterByDifficulty(filtered, difficulty)
   return <div className="screen"><div className="toolbar"><input className="search-input" placeholder="Search exercises..." value={query} onChange={(event) => setQuery(event.target.value)} />{[['Muscle group', muscle, setMuscle, 'muscleGroup'], ['Equipment', equipment, setEquipment, 'equipment'], ['Difficulty', difficulty, setDifficulty, 'difficulty']].map(([label, value, setter, key]) => <label className="filter" key={key}>{label}<select value={value} onChange={(event) => setter(event.target.value)}>{values(key).map((option) => <option key={option}>{option}</option>)}</select></label>)}</div><p className="result-count">{filtered.length} exercises available</p><div className="exercise-grid">{filtered.map((exercise) => <article className="exercise-card" key={exercise.id}><div className="exercise-visual">{exercise.name.slice(0, 2).toUpperCase()}</div><div className="exercise-content"><div className="tag-row"><span>{exercise.muscleGroup}</span><span>{exercise.difficulty}</span></div><h2>{exercise.name}</h2><p>{exercise.description}</p><small>{exercise.equipment}</small><button onClick={() => onAdd(exercise)}>Add to workout <span>＋</span></button></div></article>)}</div></div>
 }
 
