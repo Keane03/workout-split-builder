@@ -1,54 +1,98 @@
-const BASE = import.meta.env.VITE_API_BASE_URL || ''
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-async function request(path, options) {
-  const response = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  })
+const API_USERNAME =
+  import.meta.env.VITE_API_USERNAME || '';
 
-  if (!response.ok) {
-    // Try to use the API's own message; fall back to the status line.
-    let message = `${response.status} ${response.statusText}`
-    try {
-      const body = await response.json()
-      if (body?.error) message = body.error
-    } catch {
-      // The body was not JSON. The status line is all we have.
-    }
-    throw new Error(message)
-  }
+const API_PASSWORD =
+  import.meta.env.VITE_API_PASSWORD || '';
 
-  return response.status === 204 ? null : response.json()
+function getAuthHeader() {
+  const credentials = `${API_USERNAME}:${API_PASSWORD}`;
+
+  return `Basic ${btoa(credentials)}`;
 }
 
-export const listExercises = () => request('/api/exercises')
+async function request(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      Authorization: getAuthHeader(),
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+  });
 
-export const listWorkouts = () => request('/api/workouts')
+  if (response.status === 204) {
+    return null;
+  }
 
-export const createWorkout = (input) =>
-  request('/api/workouts', { method: 'POST', body: JSON.stringify(input) })
+  const data = await response.json();
 
-export const updateWorkout = (id, input) =>
-  request(`/api/workouts/${id}`, { method: 'PUT', body: JSON.stringify(input) })
+  if (!response.ok) {
+    throw new Error(data.error || 'Request failed');
+  }
 
-export const deleteWorkout = (id) =>
-  request(`/api/workouts/${id}`, { method: 'DELETE' })
+  return data;
+}
 
-export const getSchedule = () => request('/api/schedule')
+export function listExercises() {
+  return request('/api/exercises');
+}
 
-export const updateSchedule = (schedule) =>
-  request('/api/schedule', { method: 'PUT', body: JSON.stringify(schedule) })
+export function listWorkouts() {
+  return request('/api/workouts');
+}
 
-export const getProfile = () => request('/api/profile')
+export function createWorkout(workout) {
+  return request('/api/workouts', {
+    method: 'POST',
+    body: JSON.stringify(workout),
+  });
+}
 
-export const updateProfile = (profile) =>
-  request('/api/profile', { method: 'PUT', body: JSON.stringify(profile) })
+export function updateWorkout(id, workout) {
+  return request(`/api/workouts/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(workout),
+  });
+}
 
-export const getWorkoutSession = (workoutId) =>
-  request(`/api/workouts/${workoutId}/session`)
+export function deleteWorkout(id) {
+  return request(`/api/workouts/${id}`, {
+    method: 'DELETE',
+  });
+}
 
-export const updateWorkoutSession = (workoutId, session) =>
-  request(`/api/workouts/${workoutId}/session`, {
+export function getSchedule() {
+  return request('/api/schedule');
+}
+
+export function updateSchedule(schedule) {
+  return request('/api/schedule', {
+    method: 'PUT',
+    body: JSON.stringify(schedule),
+  });
+}
+
+export function getProfile() {
+  return request('/api/profile');
+}
+
+export function updateProfile(profile) {
+  return request('/api/profile', {
+    method: 'PUT',
+    body: JSON.stringify(profile),
+  });
+}
+
+export function getWorkoutSession(id) {
+  return request(`/api/workouts/${id}/session`);
+}
+
+export function updateWorkoutSession(id, session) {
+  return request(`/api/workouts/${id}/session`, {
     method: 'PUT',
     body: JSON.stringify(session),
-  })
+  });
+}
