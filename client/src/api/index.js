@@ -41,3 +41,10 @@ export const {
   getWorkoutSession,
   updateWorkoutSession,
 } = implementation
+
+export const {
+  checkLogin,
+  saveCredentials,
+  clearCredentials,
+  hasCredentials,
+} = httpApi

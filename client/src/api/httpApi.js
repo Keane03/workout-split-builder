@@ -1,23 +1,41 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-const API_USERNAME =
-  import.meta.env.VITE_API_USERNAME || '';
-
-const API_PASSWORD =
-  import.meta.env.VITE_API_PASSWORD || '';
-
 function getAuthHeader() {
-  const credentials = `${API_USERNAME}:${API_PASSWORD}`;
+  const username = sessionStorage.getItem('apiUsername') || '';
+  const password = sessionStorage.getItem('apiPassword') || '';
 
-  return `Basic ${btoa(credentials)}`;
+  if (!username || !password) {
+    return null;
+  }
+
+  return `Basic ${btoa(`${username}:${password}`)}`;
+}
+
+export function saveCredentials(username, password) {
+  sessionStorage.setItem('apiUsername', username);
+  sessionStorage.setItem('apiPassword', password);
+}
+
+export function clearCredentials() {
+  sessionStorage.removeItem('apiUsername');
+  sessionStorage.removeItem('apiPassword');
+}
+
+export function hasCredentials() {
+  return Boolean(
+    sessionStorage.getItem('apiUsername') &&
+    sessionStorage.getItem('apiPassword')
+  );
 }
 
 async function request(path, options = {}) {
+  const authHeader = getAuthHeader();
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {
-      Authorization: getAuthHeader(),
+      ...(authHeader ? { Authorization: authHeader } : {}),
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
@@ -30,10 +48,16 @@ async function request(path, options = {}) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || 'Request failed');
+    const error = new Error(data.error || 'Request failed');
+    error.status = response.status;
+    throw error;
   }
 
   return data;
+}
+
+export function checkLogin() {
+  return request('/healthz');
 }
 
 export function listExercises() {

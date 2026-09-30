@@ -35,6 +35,15 @@ import {
   updateWorkout,
 
   updateWorkoutSession,
+  USING_MOCK_API,
+
+  checkLogin,
+
+  clearCredentials,
+
+  hasCredentials,
+
+  saveCredentials,
 
 } from './api'
 
@@ -49,8 +58,6 @@ import {
   estimateWorkoutMinutes,
 
 } from './utils/workoutStats.js'
-
-
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -70,11 +77,7 @@ const NAV_ITEMS = [
 
 ]
 
-
-
 const EMPTY_WORKOUT = { id: null, name: '', description: '', exercises: [] }
-
-
 
 function todayName() {
 
@@ -84,13 +87,11 @@ function todayName() {
 
 }
 
-
-
-
-
 export default function App() {
 
   const [status, setStatus] = useState('loading')
+  const [loginUsername, setLoginUsername] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
 
   const [screen, setScreen] = useState('dashboard')
 
@@ -109,8 +110,6 @@ export default function App() {
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null)
 
   const [editingWorkout, setEditingWorkout] = useState(null)
-
-
 
   async function load() {
 
@@ -147,24 +146,41 @@ export default function App() {
       setStatus('ready')
 
     } catch (caught) {
-
       setError(caught)
 
-      setStatus('error')
-
+      if (!USING_MOCK_API && caught.status === 401) {
+        clearCredentials()
+        setStatus('login')
+      } else {
+        setStatus('error')
+      }
     }
-
   }
 
+  async function handleLogin(event) {
+    event.preventDefault()
+    setError(null)
 
+    saveCredentials(loginUsername, loginPassword)
+
+    try {
+      await checkLogin()
+      setLoginPassword('')
+      await load()
+    } catch (caught) {
+      clearCredentials()
+      setError(new Error('Invalid username or password'))
+      setStatus('login')
+    }
+  }
 
   useEffect(() => {
-
-    load()
-
+    if (USING_MOCK_API || hasCredentials()) {
+      load()
+    } else {
+      setStatus('login')
+    }
   }, [])
-
-
 
   const workoutById = (id) => workouts.find((workout) => String(workout.id) === String(id))
 
@@ -178,8 +194,6 @@ export default function App() {
 
     : 0
 
-
-
   function openBuilder(workout = EMPTY_WORKOUT) {
 
     setEditingWorkout({ ...workout, exercises: workout.exercises.map((item) => ({ ...item })) })
@@ -187,8 +201,6 @@ export default function App() {
     setScreen('builder')
 
   }
-
-
 
   function addExerciseToBuilder(exercise) {
 
@@ -207,8 +219,6 @@ export default function App() {
     setScreen('builder')
 
   }
-
-
 
   async function saveWorkout() {
 
@@ -236,8 +246,6 @@ export default function App() {
 
   }
 
-
-
   async function removeWorkout(id) {
 
     try {
@@ -258,8 +266,6 @@ export default function App() {
 
   }
 
-
-
   async function saveSchedule(day, workoutId) {
 
     const next = { ...schedule, [day]: workoutId || null }
@@ -270,8 +276,6 @@ export default function App() {
 
   }
 
-
-
   async function saveProfile(event) {
 
     event.preventDefault()
@@ -280,13 +284,48 @@ export default function App() {
 
   }
 
+  if (status === 'login') {
+    return (
+      <div className="loading-screen">
+        <form onSubmit={handleLogin}>
+          <h1>Workout Split Builder</h1>
+          <p>Sign in to continue.</p>
 
+          {error && (
+            <p className="error" role="alert">
+              {error.message}
+            </p>
+          )}
+
+          <label>
+            Username
+            <input
+              type="text"
+              value={loginUsername}
+              onChange={(event) => setLoginUsername(event.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            Password
+            <input
+              type="password"
+              value={loginPassword}
+              onChange={(event) => setLoginPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          <button type="submit">Sign in</button>
+        </form>
+      </div>
+    )
+  }
 
   if (status === 'loading') return <div className="loading-screen">Loading your training space...</div>
 
   if (status === 'error') return <div className="loading-screen"><p className="error">{error?.message}</p><button onClick={load}>Try again</button></div>
-
-
 
   return (
 
@@ -332,8 +371,6 @@ export default function App() {
 
 }
 
-
-
 function Dashboard({
 
   todayWorkout,
@@ -358,8 +395,6 @@ function Dashboard({
 
   const totalExercises = getTotalExercises(workouts)
 
-
-
   return (
 
     <div className="screen dashboard">
@@ -372,8 +407,6 @@ function Dashboard({
 
           <h2>{todayWorkout?.name || 'Rest and recover'}</h2>
 
-
-
           <p>
 
             {todayWorkout
@@ -383,8 +416,6 @@ function Dashboard({
               : 'No workout assigned today. Use the schedule to plan your next session.'}
 
           </p>
-
-
 
           {todayWorkout && (
 
@@ -397,8 +428,6 @@ function Dashboard({
           )}
 
         </div>
-
-
 
         <div className="hero-stamp">
 
@@ -418,8 +447,6 @@ function Dashboard({
 
       </section>
 
-
-
       <div className="stat-grid">
 
         <div className="stat-card">
@@ -432,8 +459,6 @@ function Dashboard({
 
         </div>
 
-
-
         <div className="stat-card">
 
           <span>Weekly completion</span>
@@ -443,8 +468,6 @@ function Dashboard({
           <small>scheduled sessions</small>
 
         </div>
-
-
 
         <div className="stat-card">
 
@@ -458,8 +481,6 @@ function Dashboard({
 
       </div>
 
-
-
       <section className="dashboard-section">
 
         <div className="section-heading">
@@ -471,8 +492,6 @@ function Dashboard({
             <h2>Weekly schedule</h2>
 
           </div>
-
-
 
           <button
 
@@ -488,15 +507,11 @@ function Dashboard({
 
         </div>
 
-
-
         <div className="week-strip">
 
           {DAYS.map((day) => {
 
             const workout = workoutById(schedule[day])
-
-
 
             return (
 
@@ -516,15 +531,11 @@ function Dashboard({
 
                 <span>{day.slice(0, 3)}</span>
 
-
-
                 <strong>
 
                   {workout ? workout.name : 'Rest'}
 
                 </strong>
-
-
 
                 <small>
 
@@ -552,8 +563,6 @@ function Dashboard({
 
 }
 
-
-
 function ExerciseLibrary({ exercises, onAdd }) {
 
   const [query, setQuery] = useState('')
@@ -578,8 +587,6 @@ filtered = filterByDifficulty(filtered, difficulty)
 
 }
 
-
-
 function WorkoutBuilder({ workout, workouts, exercises, onNew, onEdit, onChange, onSave, onDelete, onAddExercise }) {
 
   const active = workout || EMPTY_WORKOUT
@@ -594,15 +601,11 @@ function WorkoutBuilder({ workout, workouts, exercises, onNew, onEdit, onChange,
 
 }
 
-
-
 function Schedule({ days, schedule, workouts, onChange, onView }) {
 
   return <div className="screen schedule-screen"><p className="lede">Assign a saved workout to each day. Changes are saved in demo mode.</p><div className="schedule-list">{days.map((day) => { const workout = workouts.find((item) => item.id === schedule[day]); return <div className="schedule-row" key={day}><div className="schedule-day"><strong>{day}</strong><small>{day === todayName() ? 'Today' : 'Training plan'}</small></div><select value={schedule[day] || ''} onChange={(event) => onChange(day, event.target.value)}><option value="">Rest day</option>{workouts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select>{workout && <button className="text-button" onClick={() => onView(workout.id)}>View workout →</button>}</div> })}</div></div>
 
 }
-
-
 
 function StartWorkout({ workout, exercises, session, onBack, onSession }) {
 
@@ -623,8 +626,6 @@ function StartWorkout({ workout, exercises, session, onBack, onSession }) {
   return <div className="screen start-screen"><button className="back-button" onClick={onBack}>← Back</button><section className="start-header"><div><span className="section-kicker">Active workout</span><h2>{workout.name}</h2><p>{workout.description}</p></div><div className="progress-ring"><strong>{progress}%</strong><small>complete</small></div></section><div className="progress-bar"><span style={{ width: `${progress}%` }} /></div><div className="start-grid"><section className="start-exercises"><h2>Exercises <span>{completed.length}/{workout.exercises.length}</span></h2>{workout.exercises.map((item, index) => { const exercise = exercises.find((entry) => entry.id === item.exerciseId); return <div className={`start-exercise ${completed.includes(item.exerciseId) ? 'complete' : ''}`} key={item.exerciseId}><button className="check-button" onClick={() => toggle(item.exerciseId)}>{completed.includes(item.exerciseId) ? '✓' : index + 1}</button><div><strong>{exercise?.name || item.exerciseId}</strong><small>{item.sets} sets × {item.reps} reps · {item.rest}s rest</small></div></div> })}</section><aside className="timer-panel"><span className="section-kicker">Rest timer</span><strong>{String(Math.floor(restSeconds / 60)).padStart(2, '0')}:{String(restSeconds % 60).padStart(2, '0')}</strong><div><button onClick={() => { setRestSeconds(60); setTimerRunning(true) }}>60 sec</button><button onClick={() => { setRestSeconds(90); setTimerRunning(true) }}>90 sec</button></div>{timerRunning && <button className="text-button" onClick={() => setTimerRunning(false)}>Pause timer</button>}</aside></div></div>
 
 }
-
-
 
 function Settings({ profile, onChange, onSave }) {
 
