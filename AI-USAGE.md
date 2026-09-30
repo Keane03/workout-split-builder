@@ -162,3 +162,14 @@ The Week 2 Node.js, Express, PostgreSQL, validation, CORS, and Basic Authenticat
 - **What AI gave:** AI suggested corrected installation, database, environment, security, and run instructions based on the actual repository structure.
 - **What I kept, changed, and why:** I updated the README and `.env.example`, then verified the frontend build and successfully ran the PostgreSQL schema and seed scripts before committing the changes.
 - **Commit:** `20d69ff` — Update Week 2 setup documentation
+
+## Week 3 AI Use
+
+### Entry 12 — Full-Stack Frontend Integration
+
+- **Date:** 2026-09-30
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help connecting the React frontend to the real Express and PostgreSQL backend instead of continuing to use the mock API.
+- **What AI gave:** AI helped identify missing backend routes and data-shape mismatches between the React frontend and PostgreSQL. It suggested adding support for workout updates, schedule data, profile data, workout sessions, camelCase API responses, and authenticated frontend requests.
+- **What I kept, changed, and why:** I implemented the backend routes and repositories, updated the database schema, connected the frontend HTTP API to the backend, and switched the local client from mock mode to the real API. I tested the dashboard, exercise library, profile saving, workout creation, editing, deletion, schedule assignment, workout completion, persistence after refresh, and authentication before committing the changes.
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/2a48073a57087cf1335077eba9beae4467765c55
