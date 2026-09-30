@@ -182,3 +182,12 @@ The Week 2 Node.js, Express, PostgreSQL, validation, CORS, and Basic Authenticat
 - **What AI gave:** AI suggested moving the username and password out of `client/.env` and making the user enter them through a login screen. It also suggested storing them only in `sessionStorage` for the current browser session and sending them through the Authorization header when calling the backend.
 - **What I kept, changed, and why:** I removed the frontend username and password environment variables, added runtime login handling, added credential checking, handled unauthorized responses, and kept the real credentials only in the backend environment file. I also tested wrong login, correct login, refresh behavior, application features, and confirmed that no old `VITE_API_USERNAME` or `VITE_API_PASSWORD` references remained.
 - **Commit:** https://github.com/Keane03/workout-split-builder/commit/878d3a7782562ac49c06607766bd8bcf39f8d346
+
+### Entry 14 — Production Deployment
+
+- **Date:** 2026-09-30
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help deploying the completed Workout Split Builder as a full-stack application and documenting the production setup.
+- **What AI gave:** AI guided me through creating a PostgreSQL database on Render, deploying the Express backend, deploying the React/Vite frontend, configuring environment variables, setting the production API URL, configuring CORS, initializing the production database, and updating the README with the live deployment information.
+- **What I kept, changed, and why:** I deployed the PostgreSQL database, backend API, and frontend using Render. I kept private credentials and database connection strings in Render environment variables, configured the frontend to use the deployed API, tested authentication and database access, and updated the README so the repository accurately describes the deployed full-stack version.
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/760156cf256ff3630734b2980e92743990df7f75
