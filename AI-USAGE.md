@@ -173,3 +173,12 @@ The Week 2 Node.js, Express, PostgreSQL, validation, CORS, and Basic Authenticat
 - **What AI gave:** AI helped identify missing backend routes and data-shape mismatches between the React frontend and PostgreSQL. It suggested adding support for workout updates, schedule data, profile data, workout sessions, camelCase API responses, and authenticated frontend requests.
 - **What I kept, changed, and why:** I implemented the backend routes and repositories, updated the database schema, connected the frontend HTTP API to the backend, and switched the local client from mock mode to the real API. I tested the dashboard, exercise library, profile saving, workout creation, editing, deletion, schedule assignment, workout completion, persistence after refresh, and authentication before committing the changes.
 - **Commit:** https://github.com/Keane03/workout-split-builder/commit/2a48073a57087cf1335077eba9beae4467765c55
+
+### Entry 13 — Frontend Credential Security Fix
+
+- **Date:** 2026-09-30
+- **Tool:** ChatGPT
+- **What I asked:** I asked for help removing the API username and password from the frontend environment variables because Vite exposes `VITE_` values in the browser bundle.
+- **What AI gave:** AI suggested moving the username and password out of `client/.env` and making the user enter them through a login screen. It also suggested storing them only in `sessionStorage` for the current browser session and sending them through the Authorization header when calling the backend.
+- **What I kept, changed, and why:** I removed the frontend username and password environment variables, added runtime login handling, added credential checking, handled unauthorized responses, and kept the real credentials only in the backend environment file. I also tested wrong login, correct login, refresh behavior, application features, and confirmed that no old `VITE_API_USERNAME` or `VITE_API_PASSWORD` references remained.
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/878d3a7782562ac49c06607766bd8bcf39f8d346
