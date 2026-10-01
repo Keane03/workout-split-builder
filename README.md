@@ -399,8 +399,4 @@ workout-split-builder/
 
 ## 13. AI Usage
 
-AI assistance was used during the development process.
-
-The complete record of AI use, corrections, errors, personal code contributions, and related commits is documented in:
-
-[AI-USAGE.md](AI-USAGE.md)
+AI assistance: ChatGPT and the VS Code AI Assistant were used throughout the project for planning, debugging, implementation support, documentation, and code review. The backend and full-stack integration were mostly AI-assisted, while I personally wrote most of `styles.css` and the workout statistics and exercise filtering utilities. See [AI-USAGE.md](AI-USAGE.md) for the complete record.
