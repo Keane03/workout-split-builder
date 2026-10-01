@@ -79,21 +79,21 @@
 
 #### `client/src/styles.css`
 
-- **Commit:** `8700007` — Build Week 1 Workout Split Builder client
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/8700007
 - **Contribution:** I personally wrote most of the styling used by the Workout Split Builder interface.
 - **What it does:** This file controls the layout, dashboard cards, sidebar, exercise cards, buttons, forms, responsive layout, spacing, and general visual design of the application.
 - **Why I built it this way:** I wanted the application to have a consistent workout-dashboard design while keeping the styling in one main CSS file that I could easily adjust.
 
 #### `client/src/utils/workoutStats.js`
 
-- **Commit:** `80b5ee9` — Add workout statistics utilities
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/80b5ee9
 - **Contribution:** I wrote the workout statistics utility functions.
 - **What it does:** It calculates total workouts, completed workouts, completion percentage, total exercises, estimated workout time, and finds a workout for a given day.
 - **Why I built it this way:** I separated the calculations from `App.jsx` so the dashboard code is easier to read and the functions can be reused.
 
 #### `client/src/utils/exerciseFilters.js`
 
-- **Commit:** `6536dbc` — Add reusable exercise filtering utilities
+- **Commit:** https://github.com/Keane03/workout-split-builder/commit/6536dbc
 - **Contribution:** I wrote the exercise filtering utility functions.
 - **What it does:** It filters the exercise list by search text, muscle group, equipment, and difficulty.
 - **Why I built it this way:** Keeping each filter in a small function makes the filtering logic easier to understand, test, and reuse.
