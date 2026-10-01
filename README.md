@@ -10,7 +10,7 @@ AI tools were used during development for planning, debugging, implementation su
 
 **Public API:** https://workout-split-builder-api.onrender.com
 
-**Demo video:** To be added
+**Demo video:** https://drive.google.com/drive/folders/1HNjNDwd8FaxfD8xLVRUFvjeHWkUZUZnI?usp=sharing
 
 ---
 
